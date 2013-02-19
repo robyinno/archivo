@@ -24,11 +24,23 @@
       <row>
         <col id="0" translatable="yes">francese</col>
       </row>
+      <row>
+        <col id="0" translatable="yes">portoghese</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">tedesco</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">olandese</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">altro</col>
+      </row>
     </data>
   </object>
   <object class="GtkWindow" id="qfhome">
     <property name="can_focus">False</property>
-    <property name="title" translatable="yes">Archivio dei documenti</property>
+    <property name="title" translatable="yes" context="Archivio dei documenti">Archivio dei documenti</property>
     <property name="window_position">center</property>
     <property name="default_width">1024</property>
     <property name="default_height">600</property>
@@ -49,7 +61,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="use_action_appearance">False</property>
-                <property name="label" translatable="yes">home page</property>
+                <property name="label" translatable="yes" context="home page">home page</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-home</property>
                 <signal name="clicked" handler="on_home_clicked" swapped="no"/>
@@ -64,7 +76,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="use_action_appearance">False</property>
-                <property name="label" translatable="yes">indietro</property>
+                <property name="label" translatable="yes" context="back">indietro</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-go-back</property>
                 <signal name="clicked" handler="on_button_clicked" swapped="no"/>
@@ -79,7 +91,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="use_action_appearance">False</property>
-                <property name="label" translatable="yes">cerca</property>
+                <property name="label" translatable="yes" context="search">cerca</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-find</property>
                 <signal name="clicked" handler="on_search_clicked" swapped="no"/>
@@ -94,7 +106,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="use_action_appearance">False</property>
-                <property name="label" translatable="yes">risultato ricerca</property>
+                <property name="label" translatable="yes" context="search result">risultato ricerca</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-justify-fill</property>
               </object>
@@ -186,7 +198,7 @@
                 <property name="can_focus">False</property>
                 <property name="halign">end</property>
                 <property name="use_action_appearance">False</property>
-                <property name="label" translatable="yes">Uscita</property>
+                <property name="label" translatable="yes" context="exit">Uscita</property>
                 <property name="use_underline">True</property>
                 <property name="icon_widget">image1</property>
                 <signal name="clicked" handler="on_exit_clicked" swapped="no"/>

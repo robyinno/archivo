@@ -4,13 +4,22 @@ import os, sys
 import locale
 import gettext
 
-APP = 'quickfind'
-DIR = 'locale'
+APP = 'quickfindhome'
+DIR = 'po'
+#DIR ='/home/roby/software/quickfind/pygtk_quickfind/proto/po'
 
-locale.setlocale(locale.LC_ALL,'')
+#locale_str = locale.setlocale(locale.LC_ALL,"en_US.utf8")
+
 gettext.bindtextdomain(APP,DIR)
 gettext.textdomain(APP)
-_ = gettext.gettext
+lang = gettext.translation(APP, DIR)#,languages=[locale_str]
+_ = lang.gettext
+
+#gettext.install(APP, DIR)
+#_ = gettext.gettext
+
+
+languages={0:'it_IT.utf8',1:'en_US.utf8',2:'es_ES.utf8',3:'fr_FR.utf8',4:'pt_PT.utf8',5:'de_DE.utf8',6:'nl_NL.utf8'}
 
 UI_FILE='quickfindhome.ui'
 ARCHIVO_DIR='/home/roby/Archivo/'
@@ -19,6 +28,7 @@ LANG='Italiano'
 class QuickHome:
 	def __init__(self):
 		self.builder = Gtk.Builder()
+		self.builder.set_translation_domain(APP)
 		self.builder.add_from_file(UI_FILE)
 		self.builder.connect_signals(self)
 		self.window = self.builder.get_object('qfhome')
@@ -56,9 +66,25 @@ class QuickHome:
 		active_index = button.get_active()
 		active_text = list_store[active_index][0]
 		if active_text != None:
+			try:
+				locale_str= locale.setlocale(locale.LC_ALL,languages[active_index])
+				#self.builder.set_translation_domain(APP)
+			except locale.Error:
+				locale_str = languages[active_index]
+			lang = gettext.translation(APP, DIR,languages=[locale_str])
+			load_lang_labels(self,lang)
 			label1=self.builder.get_object('lab_lang_selected')
 			label1.set_text(active_text)
 
+def load_lang_labels(self,lang):
+	_ = lang.gettext
+	self.window.set_title(_('Archivio dei documenti'))
+	self.builder.get_object('homepage').set_tooltip_text(_('home page'))
+	self.builder.get_object('cerca').set_tooltip_text(_('cerca'))
+	self.builder.get_object('back').set_tooltip_text(_('indietro'))
+	self.builder.get_object('risultati ricerca').set_tooltip_text(_('risultato ricerca'))
+	self.builder.get_object('uscita').set_tooltip_text(_('Uscita'))
+	
 def main():
 	app = QuickHome()
 	Gtk.main()
