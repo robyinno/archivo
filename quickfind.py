@@ -70,23 +70,30 @@ class QuickHome:
 			lang = gettext.translation(APP, DIR,languages=[self.language])
 			self.load_lang_labels(lang)
 			self.go_home(lang)
-			label1=self.builder.get_object('lab_lang_selected')
-			label1.set_text(active_text)
+			#label1=self.builder.get_object('lab_lang_selected')
+			#label1.set_text(active_text)
 
 	def load_lang_labels(self,lang):
 		_ = lang.gettext
 		self.window.set_title(_('Archivio dei documenti'))
 		self.builder.get_object('homepage').set_tooltip_text(_('home page'))
+		self.builder.get_object('homepage').set_label(_('home page'))
 		self.builder.get_object('cerca').set_tooltip_text(_('cerca'))
+		self.builder.get_object('cerca').set_label(_('cerca'))
 		self.builder.get_object('back').set_tooltip_text(_('indietro'))
+		self.builder.get_object('back').set_label(_('indietro'))
 		self.builder.get_object('risultati ricerca').set_tooltip_text(_('risultato ricerca'))
+		self.builder.get_object('risultati ricerca').set_label(_('risultato ricerca'))
 		self.builder.get_object('uscita').set_tooltip_text(_('Uscita'))
+		self.builder.get_object('uscita').set_label(_('Uscita'))
+		
+		
 		
 	def go_home(self,lang):
 		_ = lang.gettext
 		uri='file://%s/%s'%(ARCHIVO_DIR,_('path_file_home_page'))
-		label1=self.builder.get_object('lab_lang_selected')
-		label1.set_text(uri)
+		#label1=self.builder.get_object('lab_lang_selected')
+		#label1.set_text(uri)
 		self.webview.load_uri(uri)
 		
 	

@@ -38,6 +38,38 @@
       </row>
     </data>
   </object>
+  <object class="GtkListStore" id="liststore2">
+    <columns>
+      <!-- column-name tipo_ricerca -->
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0" translatable="yes">in tutte le cartelle</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Appunti</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Conferenze</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Interviste</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Libri</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Materiali</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Riunioni</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Seminari</col>
+      </row>
+    </data>
+  </object>
   <object class="GtkWindow" id="qfhome">
     <property name="can_focus">False</property>
     <property name="title" translatable="yes" context="Archivio dei documenti">Archivio dei documenti</property>
@@ -56,10 +88,12 @@
           <object class="GtkToolbar" id="toolbar_up">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="toolbar_style">both</property>
             <child>
               <object class="GtkToolButton" id="homepage">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="has_tooltip">True</property>
                 <property name="use_action_appearance">False</property>
                 <property name="label" translatable="yes" context="home page">home page</property>
                 <property name="use_underline">True</property>
@@ -176,13 +210,8 @@
                         </child>
                       </object>
                     </child>
-                    <child type="label">
-                      <object class="GtkLabel" id="lab_lang_selected">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">default</property>
-                        <property name="width_chars">25</property>
-                      </object>
+                    <child type="label_item">
+                      <placeholder/>
                     </child>
                   </object>
                 </child>
@@ -195,8 +224,10 @@
             <child>
               <object class="GtkToolButton" id="uscita">
                 <property name="visible">True</property>
+                <property name="app_paintable">True</property>
                 <property name="can_focus">False</property>
                 <property name="halign">end</property>
+                <property name="hexpand">True</property>
                 <property name="use_action_appearance">False</property>
                 <property name="label" translatable="yes" context="exit">Uscita</property>
                 <property name="use_underline">True</property>
@@ -204,7 +235,7 @@
                 <signal name="clicked" handler="on_exit_clicked" swapped="no"/>
               </object>
               <packing>
-                <property name="expand">True</property>
+                <property name="expand">False</property>
                 <property name="homogeneous">True</property>
               </packing>
             </child>
@@ -246,12 +277,13 @@
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <child>
-              <object class="GtkEntry" id="entry1">
+              <object class="GtkEntry" id="testo_da_cercare">
                 <property name="width_request">100</property>
                 <property name="height_request">30</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="invisible_char">●</property>
+                <property name="text" translatable="yes">Scrivi qui...</property>
               </object>
               <packing>
                 <property name="x">263</property>
@@ -259,11 +291,13 @@
               </packing>
             </child>
             <child>
-              <object class="GtkComboBox" id="combobox1">
+              <object class="GtkComboBox" id="combo_ricerca">
                 <property name="width_request">100</property>
                 <property name="height_request">30</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="model">liststore2</property>
+                <property name="add_tearoffs">True</property>
               </object>
               <packing>
                 <property name="x">263</property>
@@ -271,8 +305,8 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="button1">
-                <property name="label" translatable="yes">button</property>
+              <object class="GtkButton" id="inizia_ricerca">
+                <property name="label" translatable="yes">inizia ricerca</property>
                 <property name="width_request">100</property>
                 <property name="height_request">20</property>
                 <property name="visible">True</property>
@@ -286,8 +320,8 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="button2">
-                <property name="label" translatable="yes">button</property>
+              <object class="GtkButton" id="chiudi">
+                <property name="label" translatable="yes">chiudi</property>
                 <property name="width_request">100</property>
                 <property name="height_request">20</property>
                 <property name="visible">True</property>
@@ -301,8 +335,8 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="button3">
-                <property name="label" translatable="yes">button</property>
+              <object class="GtkButton" id="pausa">
+                <property name="label" translatable="yes">pausa</property>
                 <property name="width_request">100</property>
                 <property name="height_request">20</property>
                 <property name="visible">True</property>
@@ -316,8 +350,8 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="button4">
-                <property name="label" translatable="yes">button</property>
+              <object class="GtkButton" id="interrompi">
+                <property name="label" translatable="yes">interrompi</property>
                 <property name="width_request">100</property>
                 <property name="height_request">20</property>
                 <property name="visible">True</property>
@@ -344,7 +378,7 @@
             <property name="n_rows">1</property>
             <property name="n_columns">2</property>
             <child>
-              <object class="GtkProgressBar" id="progressbar1">
+              <object class="GtkProgressBar" id="progress_ricerca">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
               </object>
@@ -356,10 +390,10 @@
               </packing>
             </child>
             <child>
-              <object class="GtkImage" id="image2">
+              <object class="GtkImage" id="img_ricerca">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="stock">gtk-missing-image</property>
+                <property name="pixbuf">texto.gif</property>
               </object>
               <packing>
                 <property name="left_attach">0</property>
