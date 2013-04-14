@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: quickfindhome 0.0.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-19 19:13+0100\n"
-"PO-Revision-Date: 2013-02-19 19:25+0100\n"
+"POT-Creation-Date: 2013-04-14 03:55+0200\n"
+"PO-Revision-Date: 2013-04-14 03:56+0100\n"
 "Last-Translator: Roberto Innocenti <robyinno@gmail.com>\n"
 "Language-Team: LANGUAGE <robyinno@gmail.com>\n"
 "Language: \n"
@@ -19,33 +19,56 @@ msgstr ""
 "X-Poedit-Country: UNITED STATES\n"
 "X-Poedit-SourceCharset: iso-8859-1\n"
 
-#: quickfind.py:79
+#: quickfindhome.ui:75
 msgid "Archivio dei documenti"
 msgstr "Registry of documents"
 
-#: quickfind.py:80
+#: quickfindhome.ui:98
 msgid "home page"
 msgstr "home page"
 
-#: quickfind.py:81
-msgid "cerca"
-msgstr "Find"
-
-#: quickfind.py:82
+#: quickfindhome.ui:113
 msgid "indietro"
 msgstr "Back"
 
-#: quickfind.py:83
+#: quickfindhome.ui:128
+msgid "cerca"
+msgstr "Find"
+
+#: quickfindhome.ui:143
 msgid "risultato ricerca"
 msgstr "Result of search"
 
-#: quickfind.py:84
+#: quickfindhome.ui:232
 msgid "Uscita"
 msgstr "Exit"
 
-#: quickfind.py:88
-msgid "path_file_home_page"
-msgstr "English/archengl.htm"
+#: quickfindhome.ui:268
+msgid "Ricerca"
+msgstr "Find"
+
+#: quickfindhome.ui:287
+msgid "Scrivi qui..."
+msgstr "Edit here..."
+
+#: quickfindhome.ui:317
+msgid "inizia ricerca"
+msgstr "find now"
+
+#: quickfindhome.ui:332
+msgid "chiudi"
+msgstr "close"
+
+#: quickfindhome.ui:347
+msgid "pausa"
+msgstr "pause"
+
+#: quickfindhome.ui:362
+msgid "interrompi"
+msgstr "stop"
+
+#~ msgid "path_file_home_page"
+#~ msgstr "English/archengl.htm"
 
 #~ msgid "default"
 #~ msgstr "default"

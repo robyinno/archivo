@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-19 19:13+0100\n"
+"POT-Creation-Date: 2013-04-14 03:55+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,30 +17,50 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: quickfind.py:79
+#: quickfindhome.ui:75
 msgid "Archivio dei documenti"
 msgstr ""
 
-#: quickfind.py:80
+#: quickfindhome.ui:98
 msgid "home page"
 msgstr ""
 
-#: quickfind.py:81
-msgid "cerca"
-msgstr ""
-
-#: quickfind.py:82
+#: quickfindhome.ui:113
 msgid "indietro"
 msgstr ""
 
-#: quickfind.py:83
+#: quickfindhome.ui:128
+msgid "cerca"
+msgstr ""
+
+#: quickfindhome.ui:143
 msgid "risultato ricerca"
 msgstr ""
 
-#: quickfind.py:84
+#: quickfindhome.ui:232
 msgid "Uscita"
 msgstr ""
 
-#: quickfind.py:88
-msgid "path_file_home_page"
+#: quickfindhome.ui:268
+msgid "Ricerca"
+msgstr ""
+
+#: quickfindhome.ui:287
+msgid "Scrivi qui..."
+msgstr ""
+
+#: quickfindhome.ui:317
+msgid "inizia ricerca"
+msgstr ""
+
+#: quickfindhome.ui:332
+msgid "chiudi"
+msgstr ""
+
+#: quickfindhome.ui:347
+msgid "pausa"
+msgstr ""
+
+#: quickfindhome.ui:362
+msgid "interrompi"
 msgstr ""

@@ -24,9 +24,11 @@ language_directory = {'it_IT':'Italiano','en_US.utf8':'English','es_ES.utf8':'Es
 UI_FILE='quickfindhome.ui'
 ARCHIVO_DIR='/home/roby/Archivo/'
 
+g_language,spare = locale.getlocale()
+
 class QuickHome:
 	def __init__(self):
-		self.language,spare = locale.getlocale()
+		self.language = g_language
 		self.builder = Gtk.Builder()
 		self.builder.set_translation_domain(APP)
 		self.builder.add_from_file(UI_FILE)
@@ -52,21 +54,22 @@ class QuickHome:
 		Gtk.main_quit()
 
 	def on_search_clicked(self,button):
-		# apre una nuova finestra quella di ricerca
+		# open new search windows
 		app = QuickSearch()
-		#Gtk.main_quit() # provvisorio
 
 	def on_lang_changed(self,button,data=None):
-		# cambia la lingua
+		# change language
+		global g_language
 		list_store = button.get_model()
 		active_index = button.get_active()
 		active_text = list_store[active_index][0]
 		if active_text != None:
 			try:
-				self.language = locale.setlocale(locale.LC_ALL,languages[active_index])
+				g_language= self.language = locale.setlocale(locale.LC_ALL,languages[active_index])
 				#self.builder.set_translation_domain(APP)
 			except locale.Error:
-				self.language = languages[active_index]
+				g_language = self.language = languages[active_index]
+				
 			lang = gettext.translation(APP, DIR,languages=[self.language])
 			self.load_lang_labels(lang)
 			self.go_home(lang)
@@ -99,14 +102,31 @@ class QuickHome:
 	
 class QuickSearch:
 	def __init__(self):
+		self.language = g_language
+		try:
+			lang = gettext.translation(APP, DIR,languages=[self.language])
+		except locale.Error:
+			self.language,spare = locale.getlocale()
+			
 		self.builder = Gtk.Builder()
 		self.builder.set_translation_domain(APP)
 		self.builder.add_from_file(UI_FILE)
 		self.builder.connect_signals(self)
 		self.window = self.builder.get_object('qfsearch')
 		#self.window.set_back_pixmap('trovaing.jpg')
+		self.load_lang_labels(lang)
 		self.window.show_all()
+		
+	def load_lang_labels(self,lang):
+		_ = lang.gettext
+		self.window.set_title(_('Ricerca'))
+		#self.builder.get_object('testo_da_cercare').set_tooltip_text(_('scrivi qui'))
+		#self.builder.get_object('testo_da_cercare').set_label(_('scrivi qui'))
+		
+	#def on_type_search_change(self):
+		# change type of search
 	
+		
 def main():
 	app = QuickHome()
 	Gtk.main()
