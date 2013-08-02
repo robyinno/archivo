@@ -3,6 +3,8 @@ from gi.repository import Gtk, WebKit
 import os, sys
 import locale
 import gettext
+import logging
+logging.basicConfig(filename='/tmp/quickfind.log',level=logging.DEBUG,format="%(asctime)s - %(levelname)s - %(message)s")
 
 APP = 'quickfindhome'
 DIR = 'po'
@@ -63,8 +65,10 @@ class QuickHome:
 		list_store = button.get_model()
 		active_index = button.get_active()
 		active_text = list_store[active_index][0]
+		# get language index 
 		if active_text != None:
 			try:
+				# get language name code-page from index
 				g_language= self.language = locale.setlocale(locale.LC_ALL,languages[active_index])
 				#self.builder.set_translation_domain(APP)
 			except locale.Error:
@@ -103,9 +107,12 @@ class QuickHome:
 class QuickSearch:
 	def __init__(self):
 		self.language = g_language
+		#locale.setlocale(locale.LC_ALL,self.language)
+		
 		try:
 			lang = gettext.translation(APP, DIR,languages=[self.language])
-		except locale.Error:
+		except locale.Error,e:
+			logging.exception(e)
 			self.language,spare = locale.getlocale()
 			
 		self.builder = Gtk.Builder()
@@ -120,9 +127,16 @@ class QuickSearch:
 	def load_lang_labels(self,lang):
 		_ = lang.gettext
 		self.window.set_title(_('Ricerca'))
-		#self.builder.get_object('testo_da_cercare').set_tooltip_text(_('scrivi qui'))
-		#self.builder.get_object('testo_da_cercare').set_label(_('scrivi qui'))
-		
+		self.builder.get_object('testo_da_cercare').set_tooltip_text(_('Scrivi qui...'))
+		self.builder.get_object('testo_da_cercare').set_text(_('Scrivi qui...'))
+		self.builder.get_object('inizia_ricerca').set_tooltip_text(_('inizia ricerca'))
+		self.builder.get_object('inizia_ricerca').set_label(_('inizia ricerca'))
+		self.builder.get_object('chiudi').set_tooltip_text(_('chiudi'))
+		self.builder.get_object('chiudi').set_label(_('chiudi'))
+		self.builder.get_object('pausa').set_tooltip_text(_('pausa'))
+		self.builder.get_object('pausa').set_label(_('pausa'))
+		self.builder.get_object('interrompi').set_tooltip_text(_('interrompi'))
+		self.builder.get_object('interrompi').set_label(_('interrompi'))
 	#def on_type_search_change(self):
 		# change type of search
 	
