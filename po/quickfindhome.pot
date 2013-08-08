@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-03 01:04+0200\n"
+"POT-Creation-Date: 2013-08-07 01:30+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,50 +17,86 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: quickfindhome.ui:75
+#: quickfind.py:85
 msgid "Archivio dei documenti"
 msgstr ""
 
-#: quickfindhome.ui:98
+#: quickfind.py:86 quickfind.py:87
 msgid "home page"
 msgstr ""
 
-#: quickfindhome.ui:113
-msgid "indietro"
-msgstr ""
-
-#: quickfindhome.ui:128
+#: quickfind.py:88 quickfind.py:89
 msgid "cerca"
 msgstr ""
 
-#: quickfindhome.ui:143
+#: quickfind.py:90 quickfind.py:91
+msgid "indietro"
+msgstr ""
+
+#: quickfind.py:92 quickfind.py:93
 msgid "risultato ricerca"
 msgstr ""
 
-#: quickfindhome.ui:232
+#: quickfind.py:94 quickfind.py:95
 msgid "Uscita"
 msgstr ""
 
-#: quickfindhome.ui:268
+#: quickfind.py:101
+msgid "path_file_home_page"
+msgstr ""
+
+#: quickfind.py:129
 msgid "Ricerca"
 msgstr ""
 
-#: quickfindhome.ui:287
+#: quickfind.py:130 quickfind.py:131
 msgid "Scrivi qui..."
 msgstr ""
 
-#: quickfindhome.ui:317
+#: quickfind.py:132 quickfind.py:133
 msgid "inizia ricerca"
 msgstr ""
 
-#: quickfindhome.ui:332
+#: quickfind.py:134 quickfind.py:135
 msgid "chiudi"
 msgstr ""
 
-#: quickfindhome.ui:347
+#: quickfind.py:136 quickfind.py:137
 msgid "pausa"
 msgstr ""
 
-#: quickfindhome.ui:362
+#: quickfind.py:138 quickfind.py:139
 msgid "interrompi"
+msgstr ""
+
+#: quickfind.py:142
+msgid "in tutte le cartelle"
+msgstr ""
+
+#: quickfind.py:143
+msgid "Appunti"
+msgstr ""
+
+#: quickfind.py:144
+msgid "Conferenze"
+msgstr ""
+
+#: quickfind.py:145
+msgid "Interviste"
+msgstr ""
+
+#: quickfind.py:146
+msgid "Libri"
+msgstr ""
+
+#: quickfind.py:147
+msgid "Materiali"
+msgstr ""
+
+#: quickfind.py:148
+msgid "Riunioni"
+msgstr ""
+
+#: quickfind.py:149
+msgid "Seminari"
 msgstr ""

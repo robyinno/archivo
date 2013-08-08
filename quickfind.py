@@ -137,6 +137,21 @@ class QuickSearch:
 		self.builder.get_object('pausa').set_label(_('pausa'))
 		self.builder.get_object('interrompi').set_tooltip_text(_('interrompi'))
 		self.builder.get_object('interrompi').set_label(_('interrompi'))
+		liststore = self.builder.get_object('liststore2')
+		liststore.clear()
+		liststore.append([_('in tutte le cartelle')])
+		liststore.append([_('Appunti')])
+		liststore.append([_('Conferenze')])
+		liststore.append([_('Interviste')])
+		liststore.append([_('Libri')])
+		liststore.append([_('Materiali')])
+		liststore.append([_('Riunioni')])
+		liststore.append([_('Seminari')])
+		
+		
+		
+		
+		#liststore.set(0,0,'cippa')
 	#def on_type_search_change(self):
 		# change type of search
 	
