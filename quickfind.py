@@ -136,7 +136,10 @@ class QuickSearch:
 		conn = sqlite3.connect('quickfind.db')
 		cursor = conn.cursor()
 		text_to_search = self.builder.get_object('testo_da_cercare').get_text()
+		
 		type_search = self.type_search
+		type_search = type_search[0:8].lower()
+		
 		sql = """SELECT tab_rows.id_doc, tab_rows.txt_row, tab_docs.ds_lang, tab_docs.nome_doc_rtf, tab_docs.nome_doc_pdf
 				FROM tab_rows INNER JOIN tab_docs ON tab_rows.id_doc = tab_docs.id_doc where ds_lang=:lang and txt_row like '%:text_to_search%' """
 				
@@ -146,14 +149,14 @@ class QuickSearch:
 		else:
 			lang = 'ita'
 			
-		param = {'lang':lang,'text_to_search':text_to_search}
+		#param = {'lang':lang,'text_to_search':text_to_search}
 		
 		sql = """SELECT tab_rows.id_doc, tab_rows.txt_row, tab_docs.ds_lang, tab_docs.nome_doc_rtf, tab_docs.nome_doc_pdf
 				FROM tab_rows INNER JOIN tab_docs ON tab_rows.id_doc = tab_docs.id_doc where ds_lang='""" + lang + "' and txt_row like '%" + text_to_search +"%'"
 				
 		if type_search != None:		
-			sql = sql + """ and nome_doc_pdf like '%?%'"""
-			param.append(type_search)
+			sql = sql + " and nome_doc_pdf like '%" + type_search + "%'"
+			#param.append(type_search)
 		
 		#cursor.execute(sql,param)
 		cursor.execute(sql)
