@@ -107,6 +107,7 @@ class QuickHome:
 class QuickSearch:
 	def __init__(self):
 		self.language = g_language
+		self.type_search = None
 		#locale.setlocale(locale.LC_ALL,self.language)
 		
 		try:
@@ -124,6 +125,42 @@ class QuickSearch:
 		self.load_lang_labels(lang)
 		self.window.show_all()
 		
+	def on_type_search_change(self,button):
+		list_store = button.get_model()
+		active_index = button.get_active()
+		if active_index != -1:
+			self.type_search = list_store[active_index][0]
+	
+	def on_start_search(self,button):
+		import sqlite3
+		conn = sqlite3.connect('quickfind.db')
+		cursor = conn.cursor()
+		text_to_search = self.builder.get_object('testo_da_cercare').get_text()
+		type_search = self.type_search
+		sql = """SELECT tab_rows.id_doc, tab_rows.txt_row, tab_docs.ds_lang, tab_docs.nome_doc_rtf, tab_docs.nome_doc_pdf
+				FROM tab_rows INNER JOIN tab_docs ON tab_rows.id_doc = tab_docs.id_doc where ds_lang=:lang and txt_row like '%:text_to_search%' """
+				
+		if language_directory.has_key(self.language):
+			lang = language_directory[self.language]
+			lang = lang[0:3].lower()
+		else:
+			lang = 'ita'
+			
+		param = {'lang':lang,'text_to_search':text_to_search}
+		
+		sql = """SELECT tab_rows.id_doc, tab_rows.txt_row, tab_docs.ds_lang, tab_docs.nome_doc_rtf, tab_docs.nome_doc_pdf
+				FROM tab_rows INNER JOIN tab_docs ON tab_rows.id_doc = tab_docs.id_doc where ds_lang='""" + lang + "' and txt_row like '%" + text_to_search +"%'"
+				
+		if type_search != None:		
+			sql = sql + """ and nome_doc_pdf like '%?%'"""
+			param.append(type_search)
+		
+		#cursor.execute(sql,param)
+		cursor.execute(sql)
+		result = cursor.fetchall()
+		for row in result:
+			print row
+			
 	def load_lang_labels(self,lang):
 		_ = lang.gettext
 		self.window.set_title(_('Ricerca'))
@@ -147,10 +184,7 @@ class QuickSearch:
 		liststore.append([_('Materiali')])
 		liststore.append([_('Riunioni')])
 		liststore.append([_('Seminari')])
-		
-		
-		
-		
+
 		#liststore.set(0,0,'cippa')
 	#def on_type_search_change(self):
 		# change type of search

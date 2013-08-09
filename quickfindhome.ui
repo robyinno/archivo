@@ -40,7 +40,7 @@
   </object>
   <object class="GtkListStore" id="liststore2">
     <columns>
-      <!-- column-name tipo_ricerca -->
+      <!-- column-name label -->
       <column type="gchararray"/>
     </columns>
     <data>
@@ -299,10 +299,12 @@
                 <property name="can_focus">False</property>
                 <property name="model">liststore2</property>
                 <property name="add_tearoffs">True</property>
+                <property name="id_column">1</property>
                 <signal name="changed" handler="on_type_search_change" swapped="no"/>
                 <child>
                   <object class="GtkCellRendererText" id="tipo_ricerca"/>
                   <attributes>
+                    <attribute name="markup">0</attribute>
                     <attribute name="text">0</attribute>
                   </attributes>
                 </child>
@@ -321,6 +323,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_action_appearance">False</property>
+                <signal name="clicked" handler="on_start_search" swapped="no"/>
               </object>
               <packing>
                 <property name="x">12</property>
