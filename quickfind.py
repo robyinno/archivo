@@ -8,6 +8,9 @@ logging.basicConfig(filename='/tmp/quickfind.log',level=logging.DEBUG,format="%(
 
 APP = 'quickfindhome'
 DIR = 'po'
+HTM_RESULT ='Quickfind.htm'
+HTM_RES_SX ='qf_sx.htm'
+TMP_DIR = 'tmp'
 #DIR ='/home/roby/software/quickfind/pygtk_quickfind/proto/po'
 
 #locale_str = locale.setlocale(locale.LC_ALL,"en_US.utf8")
@@ -27,6 +30,13 @@ UI_FILE='quickfindhome.ui'
 ARCHIVO_DIR='/home/roby/Archivo/'
 
 g_language,spare = locale.getlocale()
+
+
+def dict_factory(cursor, row):
+    d = {}
+    for idx, col in enumerate(cursor.description):
+        d[col[0]] = row[idx]
+    return d
 
 class QuickHome:
 	def __init__(self):
@@ -103,7 +113,70 @@ class QuickHome:
 		#label1.set_text(uri)
 		self.webview.load_uri(uri)
 		
+class QuickResult:
+	def __init__(self,result):
+		self.language = g_language
+		self.type_search = None
+		
+		try:
+			lang = gettext.translation(APP, DIR,languages=[self.language])
+		except locale.Error,e:
+			logging.exception(e)
+			self.language,spare = locale.getlocale()
+			
+		self.builder = Gtk.Builder()
+		self.builder.set_translation_domain(APP)
+		self.builder.add_from_file(UI_FILE)
+		self.builder.connect_signals(self)
+		self.window = self.builder.get_object('qfresult')
+		#self.window.set_back_pixmap('trovaing.jpg')
+		self.webview = WebKit.WebView()
+		scrolled_window = self.builder.get_object('scrolledwindow')
+		scrolled_window.add(self.webview)
+		self.load_lang_labels(lang)
+		self.view_result(result)
+		self.window.show_all()
+		
+	def load_lang_labels(self,lang):
+		_ = lang.gettext
+		self.window.set_title(_('Risultato'))
 	
+	def _prep_qf_sx(self,result):
+		from cStringIO import StringIO
+		file_html = StringIO()
+		html = """<html>
+   <head>
+      <link rel='stylesheet' type='text/css' href='quickfind.css'>
+   </head>
+   <body bgproperties='fixed' background='sfondosx.jpg' oncontextmenu='return false;'>"""
+	  	file_html.write(html)
+	  	
+		row_html ="""&nbsp;<a target='f_dx' href='%s' title='%s'><img border='0' src='check.gif'></a>
+	<font face='Arial' size='2' color='#000000'><b>&nbsp;&nbsp;&nbsp;<a target='f_dx' href='%s' title='%s'>%s</a>
+	</b></font><br>"""
+	
+		for row in result:
+			file_name = os.path.splitext(os.path.basename(row['nome_doc_pdf']))[0] # estract only file_name, without extension
+			file_html.write(row_html%(row['nome_doc_rtf'],row['nome_doc_rtf'],row['nome_doc_pdf'],row['nome_doc_pdf'],file_name))	
+		
+		file_html.write("""</body></html>""")
+		return file_html.getvalue()
+		
+	def view_result(self,result):
+		#qf_sx.htm
+		html_sx = self._prep_qf_sx(result)
+		f = open(os.getcwd() + '/' + TMP_DIR + '/' + HTM_RES_SX,'w')
+		f.write(html_sx)
+		f.close()
+		
+		#prepare others html
+		#qf_dx.htm # fixed
+		#qf_top.htm 
+		uri='file://%s/%s'%(os.getcwd() + '/' + TMP_DIR,HTM_RESULT)
+		#label1=self.builder.get_object('lab_lang_selected')
+		#label1.set_text(uri)
+		self.webview.load_uri(uri) 
+		
 class QuickSearch:
 	def __init__(self):
 		self.language = g_language
@@ -121,6 +194,7 @@ class QuickSearch:
 		self.builder.add_from_file(UI_FILE)
 		self.builder.connect_signals(self)
 		self.window = self.builder.get_object('qfsearch')
+		
 		#self.window.set_back_pixmap('trovaing.jpg')
 		self.load_lang_labels(lang)
 		self.window.show_all()
@@ -134,11 +208,14 @@ class QuickSearch:
 	def on_start_search(self,button):
 		import sqlite3
 		conn = sqlite3.connect('quickfind.db')
+		conn.row_factory = dict_factory
 		cursor = conn.cursor()
 		text_to_search = self.builder.get_object('testo_da_cercare').get_text()
 		
 		type_search = self.type_search
-		type_search = type_search[0:8].lower()
+		if type_search != None:
+			if len(type_search) > 8:
+				type_search = type_search[0:8].lower()
 		
 		sql = """SELECT tab_rows.id_doc, tab_rows.txt_row, tab_docs.ds_lang, tab_docs.nome_doc_rtf, tab_docs.nome_doc_pdf
 				FROM tab_rows INNER JOIN tab_docs ON tab_rows.id_doc = tab_docs.id_doc where ds_lang=:lang and txt_row like '%:text_to_search%' """
@@ -161,9 +238,8 @@ class QuickSearch:
 		#cursor.execute(sql,param)
 		cursor.execute(sql)
 		result = cursor.fetchall()
-		for row in result:
-			print row
-			
+		QuickResult(result)
+				
 	def load_lang_labels(self,lang):
 		_ = lang.gettext
 		self.window.set_title(_('Ricerca'))
