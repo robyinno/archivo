@@ -10,6 +10,8 @@ APP = 'quickfindhome'
 DIR = 'po'
 HTM_RESULT ='Quickfind.htm'
 HTM_RES_SX ='qf_sx.htm'
+HTM_RES_TOP ='qf_top.htm'
+
 TMP_DIR = 'tmp'
 #DIR ='/home/roby/software/quickfind/pygtk_quickfind/proto/po'
 
@@ -114,7 +116,7 @@ class QuickHome:
 		self.webview.load_uri(uri)
 		
 class QuickResult:
-	def __init__(self,result):
+	def __init__(self,result,text_search):
 		self.language = g_language
 		self.type_search = None
 		
@@ -131,15 +133,31 @@ class QuickResult:
 		self.window = self.builder.get_object('qfresult')
 		#self.window.set_back_pixmap('trovaing.jpg')
 		self.webview = WebKit.WebView()
-		scrolled_window = self.builder.get_object('scrolledwindow')
+		scrolled_window = self.builder.get_object('scrolledwindow1')
 		scrolled_window.add(self.webview)
 		self.load_lang_labels(lang)
-		self.view_result(result)
+		self.view_result(result,text_search)
 		self.window.show_all()
 		
 	def load_lang_labels(self,lang):
 		_ = lang.gettext
 		self.window.set_title(_('Risultato'))
+	
+	def _prep_qf_dx(self,search_text):
+		search_result = _('risultato della ricerca')
+		text_for_display_edit = _('per visualizzare un documento...')
+		
+		html = """<html>
+   <head>
+      <link rel='stylesheet' type='text/css' href='quickfind.css'>
+   </head>
+   <body bgproperties='fixed' background='sfondo.jpg' oncontextmenu='return false;'>
+      <div align='left'><br>&nbsp;{0}&nbsp;&quot;{1}&quot;</div>
+      <div class='sottotitolo'>{2}<img border='0' src='check.gif'></div>
+      <hr size='2' color='#990000' width='100%'>
+   </body>
+</html>""".format(search_result,search_text,text_for_display_edit)
+		return html
 	
 	def _prep_qf_sx(self,result):
 		from cStringIO import StringIO
@@ -162,11 +180,16 @@ class QuickResult:
 		file_html.write("""</body></html>""")
 		return file_html.getvalue()
 		
-	def view_result(self,result):
+	def view_result(self,result,search_text):
 		#qf_sx.htm
 		html_sx = self._prep_qf_sx(result)
 		f = open(os.getcwd() + '/' + TMP_DIR + '/' + HTM_RES_SX,'w')
 		f.write(html_sx)
+		f.close()
+		
+		html_dx = self._prep_qf_dx(search_text)
+		f = open(os.getcwd() + '/' + TMP_DIR + '/' + HTM_RES_TOP,'w')
+		f.write(html_dx)
 		f.close()
 		
 		#prepare others html
@@ -228,17 +251,17 @@ class QuickSearch:
 			
 		#param = {'lang':lang,'text_to_search':text_to_search}
 		
-		sql = """SELECT tab_rows.id_doc, tab_rows.txt_row, tab_docs.ds_lang, tab_docs.nome_doc_rtf, tab_docs.nome_doc_pdf
+		sql = """SELECT tab_rows.id_doc,tab_docs.ds_lang, tab_docs.nome_doc_rtf, tab_docs.nome_doc_pdf
 				FROM tab_rows INNER JOIN tab_docs ON tab_rows.id_doc = tab_docs.id_doc where ds_lang='""" + lang + "' and txt_row like '%" + text_to_search +"%'"
 				
 		if type_search != None:		
 			sql = sql + " and nome_doc_pdf like '%" + type_search + "%'"
 			#param.append(type_search)
-		
+		sql = sql + " group by tab_docs.nome_doc_pdf"
 		#cursor.execute(sql,param)
 		cursor.execute(sql)
 		result = cursor.fetchall()
-		QuickResult(result)
+		QuickResult(result,text_to_search)
 				
 	def load_lang_labels(self,lang):
 		_ = lang.gettext

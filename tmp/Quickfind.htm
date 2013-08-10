@@ -1,0 +1,17 @@
+<!-- 
+frame contenente titoli, elenco docs e area visa docs
+--> 
+
+<html>
+	<head>
+		<title></title>
+	</head>
+	
+	<frameset rows="80,*" framespacing="0" border="0" frameborder="0">
+	   <frame name="f_top" scrolling="no" target="f_top" src="qf_top.htm" marginwidth="0" marginheight="0" noresize>   <!-- header -->
+	   <frameset cols="155,*" framespacing="0" border="0" frameborder="0">
+	   	<frame name="f_sx" target="f_dx" scrolling="yes" marginwidth="0" marginheight="0" src="qf_sx.htm" noresize>   <!-- lista docs --> 
+			<frame name="f_dx" src="qf_dx.htm">   <!-- area visa doc -->
+	   </frameset>
+	</frameset>
+</html>

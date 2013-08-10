@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: quickfindhome 0.0.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-07 01:30+0200\n"
-"PO-Revision-Date: 2013-08-07 01:35+0100\n"
+"POT-Creation-Date: 2013-08-11 01:22+0200\n"
+"PO-Revision-Date: 2013-08-11 01:25+0100\n"
 "Last-Translator: Roberto Innocenti <robyinno@gmail.com>\n"
 "Language-Team: LANGUAGE <robyinno@gmail.com>\n"
 "Language: \n"
@@ -17,98 +17,112 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-Language: Spanish\n"
 
-#: quickfind.py:85
+#: quickfind.py:97
 msgid "Archivio dei documenti"
 msgstr "Archivo de documentos"
 
-#: quickfind.py:86
-#: quickfind.py:87
+#: quickfind.py:98
+#: quickfind.py:99
 msgid "home page"
 msgstr "Pagina inicial"
 
-#: quickfind.py:88
-#: quickfind.py:89
+#: quickfind.py:100
+#: quickfind.py:101
 msgid "cerca"
 msgstr "Búsqueda"
 
-#: quickfind.py:90
-#: quickfind.py:91
+#: quickfind.py:102
+#: quickfind.py:103
 msgid "indietro"
 msgstr "Atràs"
 
-#: quickfind.py:92
-#: quickfind.py:93
+#: quickfind.py:104
+#: quickfind.py:105
 msgid "risultato ricerca"
 msgstr "Resultados de la búsqueda"
 
-#: quickfind.py:94
-#: quickfind.py:95
+#: quickfind.py:106
+#: quickfind.py:107
 msgid "Uscita"
 msgstr "Salir"
 
-#: quickfind.py:101
+#: quickfind.py:113
 msgid "path_file_home_page"
 msgstr "Espanol/archespa.htm"
 
-#: quickfind.py:129
+#: quickfind.py:144
+#, fuzzy
+msgid "Risultato"
+msgstr "Resultados de la búsqueda"
+
+#: quickfind.py:147
+#, fuzzy
+msgid "risultato della ricerca"
+msgstr "Resultados de la búsqueda"
+
+#: quickfind.py:148
+msgid "per visualizzare un documento..."
+msgstr "Para visualizar un documento clicar sobre el nombre.<br>&nbsp;Para editarlo clicar sobre "
+
+#: quickfind.py:268
 #, fuzzy
 msgid "Ricerca"
 msgstr "Búsqueda"
 
-#: quickfind.py:130
-#: quickfind.py:131
+#: quickfind.py:269
+#: quickfind.py:270
 msgid "Scrivi qui..."
 msgstr "Escribir aquí..."
 
-#: quickfind.py:132
-#: quickfind.py:133
+#: quickfind.py:271
+#: quickfind.py:272
 msgid "inizia ricerca"
 msgstr "Buscar ahora"
 
-#: quickfind.py:134
-#: quickfind.py:135
+#: quickfind.py:273
+#: quickfind.py:274
 msgid "chiudi"
 msgstr "Anular"
 
-#: quickfind.py:136
-#: quickfind.py:137
+#: quickfind.py:275
+#: quickfind.py:276
 msgid "pausa"
 msgstr "Pausa"
 
-#: quickfind.py:138
-#: quickfind.py:139
+#: quickfind.py:277
+#: quickfind.py:278
 msgid "interrompi"
 msgstr "Interrumpe"
 
-#: quickfind.py:142
+#: quickfind.py:281
 msgid "in tutte le cartelle"
 msgstr "En todas las carpetas"
 
-#: quickfind.py:143
+#: quickfind.py:282
 msgid "Appunti"
 msgstr "Apuntes"
 
-#: quickfind.py:144
+#: quickfind.py:283
 msgid "Conferenze"
 msgstr "Conferencias"
 
-#: quickfind.py:145
+#: quickfind.py:284
 msgid "Interviste"
 msgstr "Entrevistas"
 
-#: quickfind.py:146
+#: quickfind.py:285
 msgid "Libri"
 msgstr "Libros"
 
-#: quickfind.py:147
+#: quickfind.py:286
 msgid "Materiali"
 msgstr "Material"
 
-#: quickfind.py:148
+#: quickfind.py:287
 msgid "Riunioni"
 msgstr "Reunion"
 
-#: quickfind.py:149
+#: quickfind.py:288
 msgid "Seminari"
 msgstr "Seminari"
 

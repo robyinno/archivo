@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: quickfindhome 0.0.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-19 19:13+0100\n"
-"PO-Revision-Date: 2013-02-19 19:17+0100\n"
+"POT-Creation-Date: 2013-08-11 01:22+0200\n"
+"PO-Revision-Date: 2013-08-11 01:24+0100\n"
 "Last-Translator: Roberto Innocenti <robyinno@gmail.com>\n"
 "Language-Team: LANGUAGE <robyinno@gmail.com>\n"
 "Language: \n"
@@ -19,33 +19,115 @@ msgstr ""
 "X-Poedit-Country: ITALY\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
-#: quickfind.py:79
+#: quickfind.py:97
 msgid "Archivio dei documenti"
 msgstr "Archivio dei documenti"
 
-#: quickfind.py:80
+#: quickfind.py:98
+#: quickfind.py:99
 msgid "home page"
 msgstr "home page"
 
-#: quickfind.py:81
+#: quickfind.py:100
+#: quickfind.py:101
 msgid "cerca"
 msgstr "cerca"
 
-#: quickfind.py:82
+#: quickfind.py:102
+#: quickfind.py:103
 msgid "indietro"
 msgstr "indietro"
 
-#: quickfind.py:83
+#: quickfind.py:104
+#: quickfind.py:105
 msgid "risultato ricerca"
 msgstr "risultato ricerca"
 
-#: quickfind.py:84
+#: quickfind.py:106
+#: quickfind.py:107
 msgid "Uscita"
 msgstr "Uscita"
 
-#: quickfind.py:88
+#: quickfind.py:113
 msgid "path_file_home_page"
 msgstr "Italiano/archital.htm"
+
+#: quickfind.py:144
+#, fuzzy
+msgid "Risultato"
+msgstr "risultato ricerca"
+
+#: quickfind.py:147
+#, fuzzy
+msgid "risultato della ricerca"
+msgstr "risultato ricerca"
+
+#: quickfind.py:148
+msgid "per visualizzare un documento..."
+msgstr ""
+
+#: quickfind.py:268
+#, fuzzy
+msgid "Ricerca"
+msgstr "cerca"
+
+#: quickfind.py:269
+#: quickfind.py:270
+msgid "Scrivi qui..."
+msgstr ""
+
+#: quickfind.py:271
+#: quickfind.py:272
+#, fuzzy
+msgid "inizia ricerca"
+msgstr "risultato ricerca"
+
+#: quickfind.py:273
+#: quickfind.py:274
+msgid "chiudi"
+msgstr ""
+
+#: quickfind.py:275
+#: quickfind.py:276
+msgid "pausa"
+msgstr ""
+
+#: quickfind.py:277
+#: quickfind.py:278
+msgid "interrompi"
+msgstr ""
+
+#: quickfind.py:281
+msgid "in tutte le cartelle"
+msgstr ""
+
+#: quickfind.py:282
+msgid "Appunti"
+msgstr ""
+
+#: quickfind.py:283
+msgid "Conferenze"
+msgstr ""
+
+#: quickfind.py:284
+msgid "Interviste"
+msgstr ""
+
+#: quickfind.py:285
+msgid "Libri"
+msgstr ""
+
+#: quickfind.py:286
+msgid "Materiali"
+msgstr ""
+
+#: quickfind.py:287
+msgid "Riunioni"
+msgstr ""
+
+#: quickfind.py:288
+msgid "Seminari"
+msgstr ""
 
 #~ msgid "default"
 #~ msgstr "default"
