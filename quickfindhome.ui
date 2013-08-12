@@ -266,6 +266,10 @@
   </object>
   <object class="GtkWindow" id="qfresult">
     <property name="can_focus">False</property>
+    <property name="window_position">center</property>
+    <property name="default_width">1024</property>
+    <property name="default_height">600</property>
+    <property name="has_resize_grip">False</property>
     <child>
       <object class="GtkScrolledWindow" id="scrolledwindow1">
         <property name="visible">True</property>
@@ -353,6 +357,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_action_appearance">False</property>
+                <signal name="clicked" handler="on_close" swapped="no"/>
               </object>
               <packing>
                 <property name="x">121</property>
@@ -383,6 +388,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_action_appearance">False</property>
+                <signal name="clicked" handler="on_interrupt" swapped="no"/>
               </object>
               <packing>
                 <property name="x">337</property>
@@ -406,6 +412,7 @@
               <object class="GtkProgressBar" id="progress_ricerca">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="hexpand">True</property>
               </object>
               <packing>
                 <property name="left_attach">1</property>

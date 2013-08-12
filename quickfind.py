@@ -1,9 +1,13 @@
 #!/usr/bin/env python
-from gi.repository import Gtk, WebKit
+#from gi.repository import Gtk, WebKit
+from gi.repository import GLib, Gtk, Gdk, GObject,WebKit
+import threading, thread
+import gobject
 import os, sys
 import locale
 import gettext
 import logging
+
 logging.basicConfig(filename='/tmp/quickfind.log',level=logging.DEBUG,format="%(asctime)s - %(levelname)s - %(message)s")
 
 APP = 'quickfindhome'
@@ -105,8 +109,6 @@ class QuickHome:
 		self.builder.get_object('risultati ricerca').set_label(_('risultato ricerca'))
 		self.builder.get_object('uscita').set_tooltip_text(_('Uscita'))
 		self.builder.get_object('uscita').set_label(_('Uscita'))
-		
-		
 		
 	def go_home(self,lang):
 		_ = lang.gettext
@@ -220,26 +222,47 @@ class QuickSearch:
 		
 		#self.window.set_back_pixmap('trovaing.jpg')
 		self.load_lang_labels(lang)
+		self.prog_search = self.builder.get_object('progress_ricerca')
+		self.prog_search.set_pulse_step(0.005)
 		self.window.show_all()
+	
+	def on_close(self,button):
+		Gtk.main_quit()
 		
+	def on_interrupt(self,button):
+		self.conn.interrupt()
+			
 	def on_type_search_change(self,button):
 		list_store = button.get_model()
 		active_index = button.get_active()
 		if active_index != -1:
 			self.type_search = list_store[active_index][0]
 	
+	def progressbar(self):
+		#Gdk.threads_enter()
+		self.prog_search.pulse()
+		#gtk.main_iteration()
+		while Gtk.events_pending():
+			Gtk.main_iteration()
+	
 	def on_start_search(self,button):
+		#threading.Thread(target = self._start_search_core())
+		self._start_search_core()
+		
+	def _start_search_core(self):
 		import sqlite3
-		conn = sqlite3.connect('quickfind.db')
-		conn.row_factory = dict_factory
-		cursor = conn.cursor()
+		self.conn = sqlite3.connect('quickfind.db',check_same_thread = False)
+		self.conn.row_factory = dict_factory
+		self.conn.set_progress_handler(self.progressbar,5000)
+		cursor = self.conn.cursor()
 		text_to_search = self.builder.get_object('testo_da_cercare').get_text()
 		
 		type_search = self.type_search
 		if type_search != None:
 			if len(type_search) > 8:
-				type_search = type_search[0:8].lower()
-		
+				type_search = type_search[0:8]
+			type_search = type_search.lower()
+			
 		sql = """SELECT tab_rows.id_doc, tab_rows.txt_row, tab_docs.ds_lang, tab_docs.nome_doc_rtf, tab_docs.nome_doc_pdf
 				FROM tab_rows INNER JOIN tab_docs ON tab_rows.id_doc = tab_docs.id_doc where ds_lang=:lang and txt_row like '%:text_to_search%' """
 				
@@ -251,13 +274,13 @@ class QuickSearch:
 			
 		#param = {'lang':lang,'text_to_search':text_to_search}
 		
-		sql = """SELECT tab_rows.id_doc,tab_docs.ds_lang, tab_docs.nome_doc_rtf, tab_docs.nome_doc_pdf
-				FROM tab_rows INNER JOIN tab_docs ON tab_rows.id_doc = tab_docs.id_doc where ds_lang='""" + lang + "' and txt_row like '%" + text_to_search +"%'"
+		sql = """SELECT d.id_doc,d.ds_lang, d.nome_doc_rtf, d.nome_doc_pdf
+				FROM tab_rows as r INNER JOIN tab_docs as d ON r.id_doc = d.id_doc where d.ds_lang='""" + lang + "' and r.txt_row like '%" + text_to_search +"%'"
 				
 		if type_search != None:		
-			sql = sql + " and nome_doc_pdf like '%" + type_search + "%'"
+			sql = sql + " and d.nome_doc_pdf like '%" + type_search + "%'"
 			#param.append(type_search)
-		sql = sql + " group by tab_docs.nome_doc_pdf"
+		sql = sql + " group by d.nome_doc_pdf"
 		#cursor.execute(sql,param)
 		cursor.execute(sql)
 		result = cursor.fetchall()
@@ -294,7 +317,11 @@ class QuickSearch:
 		
 def main():
 	app = QuickHome()
+	#GLib.threads_init()
+	Gdk.threads_init()
+	Gdk.threads_enter()
 	Gtk.main()
+	Gdk.threads_leave()
 
 if __name__ == "__main__":
 	main()
