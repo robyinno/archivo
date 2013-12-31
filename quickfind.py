@@ -7,6 +7,13 @@ import os, sys
 import locale
 import gettext
 import logging
+import helpers
+
+import ConfigParser
+config = ConfigParser.ConfigParser()
+config.readfp(open(os.getcwd() + '/quickfind.ini'))
+RootPath = config.get('QuickFind','RootPath')
+DBName = config.get('QuickFind','DBName')
 
 logging.basicConfig(filename='/tmp/quickfind.log',level=logging.DEBUG,format="%(asctime)s - %(levelname)s - %(message)s")
 
@@ -33,16 +40,9 @@ _ = lang.gettext
 languages={0:'it_IT.utf8',1:'en_US.utf8',2:'es_ES.utf8',3:'fr_FR.utf8',4:'pt_PT.utf8',5:'de_DE.utf8',6:'nl_NL.utf8'}
 language_directory = {'it_IT':'Italiano','en_US.utf8':'English','es_ES.utf8':'Espanol','fr_FR':'Francais','pt_PT':'Portugue','de_DE':'Deutsch'}
 UI_FILE='quickfindhome.ui'
-ARCHIVO_DIR='/home/roby/Archivo/'
+ARCHIVO_DIR=RootPath
 
 g_language,spare = locale.getlocale()
-
-
-def dict_factory(cursor, row):
-    d = {}
-    for idx, col in enumerate(cursor.description):
-        d[col[0]] = row[idx]
-    return d
 
 class QuickHome:
 	def __init__(self):
@@ -53,10 +53,44 @@ class QuickHome:
 		self.builder.connect_signals(self)
 		self.window = self.builder.get_object('qfhome')
 		self.webview = WebKit.WebView()
+		self.webview.connect("download-requested", self.on_download_requested)
+		self.webview.connect("navigation-requested", self.on_navigation_requested)
+		self.webview.connect("mime-type-policy-decision-requested", self.on_mime_type_policy_decision_requested)
 		scrolled_window = self.builder.get_object('scrolledwindow')
 		scrolled_window.add(self.webview)
 		self.go_home(lang)
 		self.window.show_all()
+		
+	def on_mime_type_policy_decision_requested(self,web_view,frame,request,mimetype,policy_decision):
+		if not web_view.can_show_mime_type(mimetype):
+			policy_decision.download()
+			web_view.stop_loading()
+			return True
+		else:
+			return False
+		
+	def on_download_requested(self, web_view,download):
+		dialog = Gtk.FileChooserDialog("Dove vuoi salvare", self.window,  Gtk.FileChooserAction.SAVE,(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
+		### non deve fare il save, dovrebbe fare l'open verificare l'open da programmi esterni
+		dialog.set_uri(download.props.network_request.props.uri)
+		
+		
+		if dialog.run() == Gtk.ResponseType.OK:
+			path_file_save = v.get_filename()
+			download.set_destination_uri(path_file_save) #download.props.network_request.props.uri
+			download.connect('notify::status', self.on_download_status_change)
+		dialog.destroy()
+		return True
+	
+	def on_download_status_change(self,download,status):
+		if download.get_status().value_name == 'WEBKIT_DOWNLOAD_STATUS_FINISHED':
+			a = ''
+		
+		
+	def on_navigation_requested(self, frame,request,user_data):
+		path_file_name = user_data.props.uri
+		if os.path.splitext(path_file_name) == '.rtf':
+			return WebKit.NavigationResponse.DOWNLOAD
 
 	def destroy(self, window):
 		Gtk.main_quit()
@@ -177,7 +211,9 @@ class QuickResult:
 	
 		for row in result:
 			file_name = os.path.splitext(os.path.basename(row['nome_doc_pdf']))[0] # estract only file_name, without extension
-			file_html.write(row_html%(row['nome_doc_rtf'],row['nome_doc_rtf'],row['nome_doc_pdf'],row['nome_doc_pdf'],file_name))	
+			uri_rtf = RootPath + helpers.capitalize_lang_path(row['nome_doc_rtf'])
+			uri_pdf = RootPath + helpers.capitalize_lang_path(row['nome_doc_pdf'])
+			file_html.write(row_html%(uri_rtf,uri_rtf,uri_pdf,uri_pdf,file_name))	
 		
 		file_html.write("""</body></html>""")
 		return file_html.getvalue()
@@ -251,8 +287,8 @@ class QuickSearch:
 		
 	def _start_search_core(self):
 		import sqlite3
-		self.conn = sqlite3.connect('quickfind.db',check_same_thread = False)
-		self.conn.row_factory = dict_factory
+		self.conn = sqlite3.connect(DBName,check_same_thread = False)
+		self.conn.row_factory = helpers.dict_factory
 		self.conn.set_progress_handler(self.progressbar,5000)
 		cursor = self.conn.cursor()
 		text_to_search = self.builder.get_object('testo_da_cercare').get_text()
