@@ -55,7 +55,7 @@ class QuickHome:
 		self.window = self.builder.get_object('qfhome')
 		self.webview = WebKit.WebView()
 		self.webview.connect("download-requested", self.on_download_requested)
-		self.webview.connect("navigation-requested", self.on_navigation_requested)
+		#self.webview.connect("navigation-requested", self.on_navigation_requested)
 		self.webview.connect("mime-type-policy-decision-requested", self.on_mime_type_policy_decision_requested)
 		scrolled_window = self.builder.get_object('scrolledwindow')
 		scrolled_window.add(self.webview)
@@ -95,10 +95,10 @@ class QuickHome:
 			a = ''
 		
 		
-	def on_navigation_requested(self, frame,request,user_data):
-		path_file_name = user_data.props.uri
-		if os.path.splitext(path_file_name) == '.rtf':
-			return WebKit.NavigationResponse.DOWNLOAD
+	#def on_navigation_requested(self, frame,request,user_data):
+	#	path_file_name = user_data.props.uri
+	#	if os.path.splitext(path_file_name) == '.rtf':
+	#		return WebKit.NavigationResponse.DOWNLOAD
 
 	def destroy(self, window):
 		Gtk.main_quit()
@@ -177,11 +177,28 @@ class QuickResult:
 		self.window = self.builder.get_object('qfresult')
 		#self.window.set_back_pixmap('trovaing.jpg')
 		self.webview = WebKit.WebView()
+		self.webview.connect("mime-type-policy-decision-requested", self.on_mime_type_policy_decision_requested)
 		scrolled_window = self.builder.get_object('scrolledwindow1')
 		scrolled_window.add(self.webview)
 		self.load_lang_labels(lang)
 		self.view_result(result,text_search)
 		self.window.show_all()
+	
+	def on_mime_type_policy_decision_requested(self,web_view,frame,request,mimetype,policy_decision):
+		if not web_view.can_show_mime_type(mimetype):
+			path_file = request.get_uri()
+			#policy_decision.download()
+			policy_decision.ignore()
+			web_view.stop_loading()
+			if sys.platform.startswith('darwin'):
+			    subprocess.call(('open', path_file))
+			elif os.name == 'nt':
+			    os.startfile(path_file)
+			elif os.name == 'posix':
+			    subprocess.call(('xdg-open', path_file))
+			return True
+		else:
+			return False
 		
 	def load_lang_labels(self,lang):
 		_ = lang.gettext
@@ -211,16 +228,17 @@ class QuickResult:
       <link rel='stylesheet' type='text/css' href='quickfind.css'>
    </head>
    <body bgproperties='fixed' background='sfondosx.jpg' oncontextmenu='return false;'>"""
+   
 	  	file_html.write(html)
 	  	
-		row_html ="""&nbsp;<a target='f_dx' href='%s' title='%s'><img border='0' src='check.gif'></a>
-	<font face='Arial' size='2' color='#000000'><b>&nbsp;&nbsp;&nbsp;<a target='f_dx' href='%s' title='%s'>%s</a>
+		row_html ="""&nbsp;<a href='%s' title='%s'><img border='0' src='check.gif'></a>
+	<font face='Arial' size='2' color='#000000'><b>&nbsp;&nbsp;&nbsp;<a href='%s' title='%s'>%s</a>
 	</b></font><br>"""
-	
+	#target='f_dx'
 		for row in result:
 			file_name = os.path.splitext(os.path.basename(row['nome_doc_pdf']))[0] # estract only file_name, without extension
-			uri_rtf = RootPath + helpers.capitalize_lang_path(row['nome_doc_rtf'])
-			uri_pdf = RootPath + helpers.capitalize_lang_path(row['nome_doc_pdf'])
+			uri_rtf = '..' + helpers.capitalize_lang_path(row['nome_doc_rtf'])
+			uri_pdf = '..' + helpers.capitalize_lang_path(row['nome_doc_pdf']) #RootPath 
 			file_html.write(row_html%(uri_rtf,uri_rtf,uri_pdf,uri_pdf,file_name))	
 		
 		file_html.write("""</body></html>""")
@@ -229,19 +247,19 @@ class QuickResult:
 	def view_result(self,result,search_text):
 		#qf_sx.htm
 		html_sx = self._prep_qf_sx(result)
-		f = open(os.getcwd() + '/' + TMP_DIR + '/' + HTM_RES_SX,'w')
+		f = open(RootPath + '/' + TMP_DIR + '/' + HTM_RES_SX,'w') #os.getcwd() + '/' + TMP_DIR +
 		f.write(html_sx)
 		f.close()
 		
 		html_dx = self._prep_qf_dx(search_text)
-		f = open(os.getcwd() + '/' + TMP_DIR + '/' + HTM_RES_TOP,'w')
+		f = open(RootPath + '/' + TMP_DIR + '/' + HTM_RES_TOP,'w') #os.getcwd() + '/' + TMP_DIR +
 		f.write(html_dx)
 		f.close()
 		
 		#prepare others html
 		#qf_dx.htm # fixed
 		#qf_top.htm 
-		uri='file://%s/%s'%(os.getcwd() + '/' + TMP_DIR,HTM_RESULT)
+		uri='file://%s/%s'%(RootPath + '/' + TMP_DIR,HTM_RESULT)
 		#label1=self.builder.get_object('lab_lang_selected')
 		#label1.set_text(uri)
 		self.webview.load_uri(uri) 
