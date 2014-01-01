@@ -8,6 +8,7 @@ import locale
 import gettext
 import logging
 import helpers
+import subprocess
 
 import ConfigParser
 config = ConfigParser.ConfigParser()
@@ -63,20 +64,27 @@ class QuickHome:
 		
 	def on_mime_type_policy_decision_requested(self,web_view,frame,request,mimetype,policy_decision):
 		if not web_view.can_show_mime_type(mimetype):
-			policy_decision.download()
+			path_file = request.get_uri()
+			#policy_decision.download()
+			policy_decision.ignore()
 			web_view.stop_loading()
+			if sys.platform.startswith('darwin'):
+			    subprocess.call(('open', path_file))
+			elif os.name == 'nt':
+			    os.startfile(path_file)
+			elif os.name == 'posix':
+			    subprocess.call(('xdg-open', path_file))
 			return True
 		else:
 			return False
 		
 	def on_download_requested(self, web_view,download):
-		dialog = Gtk.FileChooserDialog("Dove vuoi salvare", self.window,  Gtk.FileChooserAction.SAVE,(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
-		### non deve fare il save, dovrebbe fare l'open verificare l'open da programmi esterni
+		#dialog = Gtk.FileChooserDialog("Dove vuoi salvare", self.window,  Gtk.FileChooserAction.SAVE,(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
+		dialog = Gtk.FileChooserDialog("Aprire", self.window,  Gtk.FileChooserAction.OPEN,(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
 		dialog.set_uri(download.props.network_request.props.uri)
 		
-		
 		if dialog.run() == Gtk.ResponseType.OK:
-			path_file_save = v.get_filename()
+			path_file_save = dialog.get_filename()
 			download.set_destination_uri(path_file_save) #download.props.network_request.props.uri
 			download.connect('notify::status', self.on_download_status_change)
 		dialog.destroy()
