@@ -1,8 +1,12 @@
 #!/usr/bin/env python
 #from gi.repository import Gtk, WebKit
 from gi.repository import GLib, Gtk, Gdk, GObject,WebKit
+#import pygtk
+#pygtk.require("2.0")
+#import gtk
+
 import threading, thread
-import gobject
+#import gobject
 import os, sys
 import locale
 import gettext
@@ -41,16 +45,24 @@ _ = lang.gettext
 languages={0:'it_IT.utf8',1:'en_US.utf8',2:'es_ES.utf8',3:'fr_FR.utf8',4:'pt_PT.utf8',5:'de_DE.utf8',6:'nl_NL.utf8'}
 language_directory = {'it_IT':'Italiano','en_US.utf8':'English','es_ES.utf8':'Espanol','fr_FR':'Francais','pt_PT':'Portugue','de_DE':'Deutsch'}
 UI_FILE='quickfindhome.ui'
+UI_FILE_HOME='quickhome.ui'
+UI_FILE_SEARCH='quicksearch.ui'
+UI_FILE_RESULT='quickresult.ui'
 ARCHIVO_DIR=RootPath
 
 g_language,spare = locale.getlocale()
 
 class QuickHome:
 	def __init__(self):
+		handlers = { 
+					"on_home_clicked" : self.on_home_clicked,
+				  }
 		self.language = g_language
 		self.builder = Gtk.Builder()
 		self.builder.set_translation_domain(APP)
-		self.builder.add_from_file(UI_FILE)
+		self.builder.add_from_file(UI_FILE_HOME)
+		#self.builder.add_objects_from_file(UI_FILE,("qfhome"))
+		
 		self.builder.connect_signals(self)
 		self.window = self.builder.get_object('qfhome')
 		self.webview = WebKit.WebView()
@@ -172,7 +184,7 @@ class QuickResult:
 			
 		self.builder = Gtk.Builder()
 		self.builder.set_translation_domain(APP)
-		self.builder.add_from_file(UI_FILE)
+		self.builder.add_from_file(UI_FILE_RESULT)
 		self.builder.connect_signals(self)
 		self.window = self.builder.get_object('qfresult')
 		#self.window.set_back_pixmap('trovaing.jpg')
@@ -278,7 +290,7 @@ class QuickSearch:
 			
 		self.builder = Gtk.Builder()
 		self.builder.set_translation_domain(APP)
-		self.builder.add_from_file(UI_FILE)
+		self.builder.add_from_file(UI_FILE_SEARCH)
 		self.builder.connect_signals(self)
 		self.window = self.builder.get_object('qfsearch')
 		
@@ -286,6 +298,7 @@ class QuickSearch:
 		self.load_lang_labels(lang)
 		self.prog_search = self.builder.get_object('progress_ricerca')
 		self.prog_search.set_pulse_step(0.005)
+		self.num_progress = self.builder.get_object('num_progress')
 		self.window.show_all()
 	
 	def on_close(self,button):
@@ -303,6 +316,7 @@ class QuickSearch:
 	def progressbar(self):
 		#Gdk.threads_enter()
 		self.prog_search.pulse()
+		#self.num_progress.set_label()
 		#gtk.main_iteration()
 		while Gtk.events_pending():
 			Gtk.main_iteration()
@@ -310,13 +324,16 @@ class QuickSearch:
 	def on_start_search(self,button):
 		#threading.Thread(target = self._start_search_core())
 		self._start_search_core()
+	
+	def on_close(self,buttom):
+		pass
 		
 	def _start_search_core(self):
 		import sqlite3
 		self.conn = sqlite3.connect(DBName,check_same_thread = False)
 		self.conn.row_factory = helpers.dict_factory
 		self.conn.set_progress_handler(self.progressbar,5000)
-		cursor = self.conn.cursor()
+		self.cursor = self.conn.cursor()
 		text_to_search = self.builder.get_object('testo_da_cercare').get_text()
 		
 		type_search = self.type_search
@@ -336,16 +353,18 @@ class QuickSearch:
 			
 		#param = {'lang':lang,'text_to_search':text_to_search}
 		
-		sql = """SELECT d.id_doc,d.ds_lang, d.nome_doc_rtf, d.nome_doc_pdf
-				FROM tab_rows as r INNER JOIN tab_docs as d ON r.id_doc = d.id_doc where d.ds_lang='""" + lang + "' and r.txt_row like '%" + text_to_search +"%'"
+		sql = """SELECT d.id_doc,d.ds_lang, d.nome_doc_rtf, d.nome_doc_pdf,t.*
+				FROM tab_rows as r INNER JOIN tab_docs as d ON r.id_doc = d.id_doc LEFT JOIN tab_file_av as t ON LOWER(t.nome_doc_rtf)=LOWER(d.nome_doc_rtf)
+				where d.ds_lang='""" + lang + "' and r.txt_row like '%" + text_to_search +"%'"
 				
 		if type_search != None:		
 			sql = sql + " and d.nome_doc_pdf like '%" + type_search + "%'"
 			#param.append(type_search)
 		sql = sql + " group by d.nome_doc_pdf"
 		#cursor.execute(sql,param)
-		cursor.execute(sql)
-		result = cursor.fetchall()
+		self.cursor.execute(sql)
+		result = self.cursor.fetchall()
+		self.num_progress.set_label(str(len(result)))
 		QuickResult(result,text_to_search)
 				
 	def load_lang_labels(self,lang):
@@ -357,10 +376,10 @@ class QuickSearch:
 		self.builder.get_object('inizia_ricerca').set_label(_('inizia ricerca'))
 		self.builder.get_object('chiudi').set_tooltip_text(_('chiudi'))
 		self.builder.get_object('chiudi').set_label(_('chiudi'))
-		self.builder.get_object('pausa').set_tooltip_text(_('pausa'))
-		self.builder.get_object('pausa').set_label(_('pausa'))
-		self.builder.get_object('interrompi').set_tooltip_text(_('interrompi'))
-		self.builder.get_object('interrompi').set_label(_('interrompi'))
+		#self.builder.get_object('pausa').set_tooltip_text(_('pausa'))
+		#self.builder.get_object('pausa').set_label(_('pausa'))
+		#self.builder.get_object('interrompi').set_tooltip_text(_('interrompi'))
+		#self.builder.get_object('interrompi').set_label(_('interrompi'))
 		liststore = self.builder.get_object('liststore2')
 		liststore.clear()
 		liststore.append([_('in tutte le cartelle')])
