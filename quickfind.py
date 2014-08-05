@@ -1,12 +1,7 @@
 #!/usr/bin/env python
-#from gi.repository import Gtk, WebKit
 from gi.repository import GLib, Gtk, Gdk, GObject,WebKit
-#import pygtk
-#pygtk.require("2.0")
-#import gtk
 
 import threading, thread
-#import gobject
 import os, sys
 import locale
 import gettext
@@ -240,19 +235,34 @@ class QuickResult:
       <link rel='stylesheet' type='text/css' href='quickfind.css'>
    </head>
    <body bgproperties='fixed' background='sfondosx.jpg' oncontextmenu='return false;'>"""
-   
-	  	file_html.write(html)
-	  	
+		file_html.write(html)
+	
 		row_html ="""&nbsp;<a href='%s' title='%s'><img border='0' src='check.gif'></a>
 	<font face='Arial' size='2' color='#000000'><b>&nbsp;&nbsp;&nbsp;<a href='%s' title='%s'>%s</a>
 	</b></font><br>"""
+		row_media_html = "<a href='%s' title='%s'><img border='0' src='%s.gif'></a>"
 	#target='f_dx'
 		for row in result:
-			file_name = os.path.splitext(os.path.basename(row['nome_doc_pdf']))[0] # estract only file_name, without extension
-			uri_rtf = '..' + helpers.capitalize_lang_path(row['nome_doc_rtf'])
-			uri_pdf = '..' + helpers.capitalize_lang_path(row['nome_doc_pdf']) #RootPath 
-			file_html.write(row_html%(uri_rtf,uri_rtf,uri_pdf,uri_pdf,file_name))	
-		
+			nome_doc_pdf = row['nome_doc_pdf']
+			nome_doc_rtf = row['nome_doc_rtf']
+			if nome_doc_pdf != None:
+				file_name = os.path.splitext(os.path.basename(nome_doc_pdf))[0] # estract only file_name, without extension
+				uri_pdf = '..' + helpers.capitalize_lang_path(nome_doc_pdf) #RootPath
+			else:
+				uri_pdf =''
+				
+			if nome_doc_rtf != None:
+				uri_rtf = '..' + helpers.capitalize_lang_path(nome_doc_rtf)
+			else:
+				uri_rtf =''
+			
+			file_html.write(row_html%(uri_rtf,uri_rtf,uri_pdf,uri_pdf,file_name))
+			uri ={}
+			for t_media in ['audio','foto','interv','video']:
+				if row['nome_file_'+ t_media] != None:
+					uri[t_media] = '..' + helpers.capitalize_lang_path(row['nome_file_'+ t_media])
+					file_html.write(row_media_html%(uri[t_media],uri[t_media],t_media))
+			
 		file_html.write("""</body></html>""")
 		return file_html.getvalue()
 		
@@ -341,9 +351,10 @@ class QuickSearch:
 			if len(type_search) > 8:
 				type_search = type_search[0:8]
 			type_search = type_search.lower()
-			
-		sql = """SELECT tab_rows.id_doc, tab_rows.txt_row, tab_docs.ds_lang, tab_docs.nome_doc_rtf, tab_docs.nome_doc_pdf
-				FROM tab_rows INNER JOIN tab_docs ON tab_rows.id_doc = tab_docs.id_doc where ds_lang=:lang and txt_row like '%:text_to_search%' """
+		
+		####### COMMENTATO	
+		#sql = """SELECT tab_rows.id_doc, tab_rows.txt_row, tab_docs.ds_lang, tab_docs.nome_doc_rtf, tab_docs.nome_doc_pdf
+		#		FROM tab_rows INNER JOIN tab_docs ON tab_rows.id_doc = tab_docs.id_doc where ds_lang=:lang and txt_row like '%:text_to_search%' """
 				
 		if language_directory.has_key(self.language):
 			lang = language_directory[self.language]
@@ -357,8 +368,8 @@ class QuickSearch:
 				FROM tab_rows as r INNER JOIN tab_docs as d ON r.id_doc = d.id_doc LEFT JOIN tab_file_av as t ON LOWER(t.nome_doc_rtf)=LOWER(d.nome_doc_rtf)
 				where d.ds_lang='""" + lang + "' and r.txt_row like '%" + text_to_search +"%'"
 				
-		if type_search != None:		
-			sql = sql + " and d.nome_doc_pdf like '%" + type_search + "%'"
+		#if type_search != None:		
+		#	sql = sql + " and d.nome_doc_pdf like '%" + type_search + "%'"
 			#param.append(type_search)
 		sql = sql + " group by d.nome_doc_pdf"
 		#cursor.execute(sql,param)

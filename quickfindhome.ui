@@ -334,7 +334,7 @@
             </child>
             <child>
               <object class="GtkButton" id="inizia_ricerca">
-                <property name="label" translatable="yes">inizia ricerca</property>
+                <property name="label" translatable="yes"> Archivio Silo</property>
                 <property name="width_request">100</property>
                 <property name="height_request">20</property>
                 <property name="visible">True</property>
@@ -360,13 +360,13 @@
                 <signal name="clicked" handler="on_close" swapped="no"/>
               </object>
               <packing>
-                <property name="x">121</property>
-                <property name="y">197</property>
+                <property name="x">239</property>
+                <property name="y">196</property>
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="pausa">
-                <property name="label" translatable="yes">pausa</property>
+              <object class="GtkButton" id="archivio_altri">
+                <property name="label" translatable="yes">Archivio Altri</property>
                 <property name="width_request">100</property>
                 <property name="height_request">20</property>
                 <property name="visible">True</property>
@@ -375,23 +375,7 @@
                 <property name="use_action_appearance">False</property>
               </object>
               <packing>
-                <property name="x">229</property>
-                <property name="y">197</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="interrompi">
-                <property name="label" translatable="yes">interrompi</property>
-                <property name="width_request">100</property>
-                <property name="height_request">20</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="use_action_appearance">False</property>
-                <signal name="clicked" handler="on_interrupt" swapped="no"/>
-              </object>
-              <packing>
-                <property name="x">337</property>
+                <property name="x">125</property>
                 <property name="y">196</property>
               </packing>
             </child>
@@ -406,16 +390,17 @@
           <object class="GtkGrid" id="grid2">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="row_homogeneous">True</property>
             <property name="n_rows">1</property>
-            <property name="n_columns">2</property>
             <child>
               <object class="GtkProgressBar" id="progress_ricerca">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="halign">end</property>
                 <property name="hexpand">True</property>
               </object>
               <packing>
-                <property name="left_attach">1</property>
+                <property name="left_attach">2</property>
                 <property name="top_attach">0</property>
                 <property name="width">1</property>
                 <property name="height">1</property>
@@ -423,12 +408,28 @@
             </child>
             <child>
               <object class="GtkImage" id="img_ricerca">
+                <property name="width_request">35</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="pixbuf">texto.gif</property>
               </object>
               <packing>
                 <property name="left_attach">0</property>
+                <property name="top_attach">0</property>
+                <property name="width">1</property>
+                <property name="height">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="num_progress">
+                <property name="width_request">60</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="halign">center</property>
+                <property name="label" translatable="yes">/</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
                 <property name="top_attach">0</property>
                 <property name="width">1</property>
                 <property name="height">1</property>
