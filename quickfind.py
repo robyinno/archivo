@@ -192,20 +192,21 @@ class QuickResult:
 		self.window.show_all()
 	
 	def on_mime_type_policy_decision_requested(self,web_view,frame,request,mimetype,policy_decision):
-		if not web_view.can_show_mime_type(mimetype):
+		#if not web_view.can_show_mime_type(mimetype):
 			path_file = request.get_uri()
-			#policy_decision.download()
-			policy_decision.ignore()
-			web_view.stop_loading()
-			if sys.platform.startswith('darwin'):
-			    subprocess.call(('open', path_file))
-			elif os.name == 'nt':
-			    os.startfile(path_file)
-			elif os.name == 'posix':
-			    subprocess.call(('xdg-open', path_file))
-			return True
-		else:
-			return False
+			if '/tmp/' in path_file == False:
+				#policy_decision.download()
+				policy_decision.ignore()
+				web_view.stop_loading()
+				if sys.platform.startswith('darwin'):
+				    subprocess.call(('open', path_file))
+				elif os.name == 'nt':
+				    os.startfile(path_file)
+				elif os.name == 'posix':
+				    subprocess.call(('xdg-open', path_file))
+				return True
+		#else:
+		#	return False
 		
 	def load_lang_labels(self,lang):
 		_ = lang.gettext
@@ -240,7 +241,7 @@ class QuickResult:
 		row_html ="""&nbsp;<a href='%s' title='%s'><img border='0' src='check.gif'></a>
 	<font face='Arial' size='2' color='#000000'><b>&nbsp;&nbsp;&nbsp;<a href='%s' title='%s'>%s</a>
 	</b></font><br>"""
-		row_media_html = "<a href='%s' title='%s'><img border='0' src='%s.gif'></a>"
+		row_media_html = "<a href='%s' title='%s'><img border='0' src='../Imagenes/%s.gif'></a><br/>"
 	#target='f_dx'
 		for row in result:
 			nome_doc_pdf = row['nome_doc_pdf']
@@ -259,7 +260,7 @@ class QuickResult:
 			file_html.write(row_html%(uri_rtf,uri_rtf,uri_pdf,uri_pdf,file_name))
 			uri ={}
 			for t_media in ['audio','foto','interv','video']:
-				if row['nome_file_'+ t_media] != None:
+				if row['nome_file_'+ t_media] != None and len(row['nome_file_'+ t_media])>0:
 					uri[t_media] = '..' + helpers.capitalize_lang_path(row['nome_file_'+ t_media])
 					file_html.write(row_media_html%(uri[t_media],uri[t_media],t_media))
 			
