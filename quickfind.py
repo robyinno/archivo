@@ -8,7 +8,7 @@ import gettext
 import logging
 import helpers
 import subprocess
-
+import urlparse
 import ConfigParser
 config = ConfigParser.ConfigParser()
 config.readfp(open(os.getcwd() + '/quickfind.ini'))
@@ -194,6 +194,9 @@ class QuickResult:
 		self.view_result(result,text_search)
 		self.window.show_all()
 	
+	def on_download_progress(self,download,something):
+		progress = download.get_progress()
+		
 	def on_notify_status(self,download,status):
 		path_file = download.get_destination_uri()
 		if download.get_status() == WebKit.DownloadStatus.FINISHED:
@@ -210,11 +213,21 @@ class QuickResult:
 	def on_navigation_policy_decision_requested(self,web_view,frame,request,navigation_action,policy_decision):
 		#path_file = request.get_uri()
 		reason = navigation_action.get_reason()
+		
 		if reason == WebKit.WebNavigationReason.LINK_CLICKED:
-			policy_decision.download()
+			
+			uri = request.get_uri()
+			path_file=urlparse.urlparse(uri).path 
+			if os.path.exists(path_file):
+				policy_decision.download()
+			else:
+				logger.error('file not existent '+ path_file)
+				policy_decision.ignore();
+				web_view.stop_loading()
+				return False
 			return True
 	
-	def on_error(self,download,error_code, error_detail, reason):
+	def on_download_error(self,download,error_code, error_detail, reason):
 		logging.error(reason)
 		
 	def on_download_requested(self,web_view,download):
@@ -224,7 +237,8 @@ class QuickResult:
 		destination_download_uri = GLib.filename_to_uri(GLib.get_user_special_dir(GLib.USER_DIRECTORY_DOWNLOAD) + '/'+ download.get_suggested_filename())
 		download.set_destination_uri(destination_download_uri)
 		download.connect("notify::status", self.on_notify_status)
-		download.connect("error", self.on_error)
+		download.connect("notify::progress", self.on_download_progress)
+		download.connect("error", self.on_download_error)
 		#download.start()
 
 		return True
@@ -277,10 +291,11 @@ class QuickResult:
    <body bgproperties='fixed' background='sfondosx.jpg' oncontextmenu='return false;'>"""
 		file_html.write(html)
 	
-		row_html ="""&nbsp;<a href='%s' title='%s'><img border='0' src='check.gif'></a>
-	<font face='Arial' size='2' color='#000000'><b>&nbsp;&nbsp;&nbsp;<a href='%s' title='%s'>%s</a>
+		row_html_rtf ="""&nbsp;<a href='%s' title='%s'><img border='0' src='check.gif'></a>"""
+		
+		row_html = """<font face='Arial' size='2' color='#000000'><b>&nbsp;&nbsp;&nbsp;<a href='%s' target="_blank" title='%s'>%s</a>
 	</b></font><br>"""
-		row_media_html = "<a href='%s' title='%s'><img border='0' src='../Imagenes/%s.gif'></a><br/>"
+		row_media_html = """<a href='%s' target="_blank" title='%s'><img border='0' src='../Imagenes/%s.gif'></a><br/>"""
 	#target='f_dx'
 		for row in result:
 			nome_doc_pdf = row['nome_doc_pdf']
@@ -293,10 +308,10 @@ class QuickResult:
 				
 			if nome_doc_rtf != None:
 				uri_rtf = '..' + helpers.capitalize_lang_path(nome_doc_rtf)
-			else:
-				uri_rtf ='javascript::void(0);'
+				file_html.write(row_html_rtf%(uri_rtf,uri_rtf))
 			
-			file_html.write(row_html%(uri_rtf,uri_rtf,uri_pdf,uri_pdf,file_name))
+			file_html.write(row_html%(uri_pdf,uri_pdf,file_name))
+			
 			uri ={}
 			for t_media in ['audio','foto','interv','video']:
 				if row['nome_file_'+ t_media] != None and len(row['nome_file_'+ t_media])>0:
