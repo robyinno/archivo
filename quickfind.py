@@ -186,7 +186,7 @@ class QuickResult:
 		self.webview = WebKit.WebView()
 		self.webview.connect("mime-type-policy-decision-requested", self.on_mime_type_policy_decision_requested)
 		self.webview.connect("navigation-policy-decision-requested", self.on_navigation_policy_decision_requested)
-		self.webview.connect("download-requested", self.on_download_request)
+		self.webview.connect("download-requested", self.on_download_requested)
 		
 		scrolled_window = self.builder.get_object('scrolledwindow1')
 		scrolled_window.add(self.webview)
@@ -195,23 +195,39 @@ class QuickResult:
 		self.window.show_all()
 	
 	def on_notify_status(self,download,status):
-		if status == WebKit.DownloadStatus.FINISHED:
-			a=a
-		
-		
+		path_file = download.get_destination_uri()
+		if download.get_status() == WebKit.DownloadStatus.FINISHED:
+			if sys.platform.startswith('darwin'):
+				subprocess.call(('open', path_file))
+			elif os.name == 'nt':
+				os.startfile(path_file)
+			elif os.name == 'posix':
+				subprocess.call(('xdg-open', path_file))
+			return True		
+		elif download.get_status() == WebKit.DownloadStatus.ERROR:
+			logging.error('download error')
+			
 	def on_navigation_policy_decision_requested(self,web_view,frame,request,navigation_action,policy_decision):
 		#path_file = request.get_uri()
 		reason = navigation_action.get_reason()
 		if reason == WebKit.WebNavigationReason.LINK_CLICKED:
 			policy_decision.download()
-			return True;
+			return True
+	
+	def on_error(self,download,error_code, error_detail, reason):
+		logging.error(reason)
 		
-	def on_download_request(self,web_view,download):
+	def on_download_requested(self,web_view,download):
 		#dest = webkit_download_get_uri()
 		#webkit_download_set_destination_uri(download, dest);
-		download.set_destination_uri(download.get_uri())
+		uri = download.get_uri()
+		destination_download_uri = GLib.filename_to_uri(GLib.get_user_special_dir(GLib.USER_DIRECTORY_DOWNLOAD) + '/'+ download.get_suggested_filename())
+		download.set_destination_uri(destination_download_uri)
 		download.connect("notify::status", self.on_notify_status)
-		return True;
+		download.connect("error", self.on_error)
+		#download.start()
+
+		return True
 		
 	def on_mime_type_policy_decision_requested(self,web_view,frame,request,mimetype,policy_decision):
 		#if not web_view.can_show_mime_type(mimetype):
