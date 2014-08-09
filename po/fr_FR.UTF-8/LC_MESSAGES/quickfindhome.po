@@ -5,73 +5,72 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: quickfindhome 0.0.2\n"
+"Project-Id-Version: quickfindhome\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-08-11 01:22+0200\n"
-"PO-Revision-Date: 2014-08-09 15:43+0100\n"
+"PO-Revision-Date: 2014-08-09 16:17+0100\n"
 "Last-Translator: Roberto Innocenti <robyinno@gmail.com>\n"
-"Language-Team: LANGUAGE <robyinno@gmail.com>\n"
-"Language: it_IT\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-SourceCharset: utf-8\n"
 "X-Generator: Poedit 1.5.4\n"
+"Language: fr_FR\n"
+"X-Poedit-SourceCharset: UTF-8\n"
 
 #: quickfind.py:97
 msgid "Archivio dei documenti"
-msgstr "Archivio dei documenti"
+msgstr ""
 
 #: quickfind.py:98 quickfind.py:99
 msgid "home page"
-msgstr "home page"
+msgstr "Page initiale"
 
 #: quickfind.py:100 quickfind.py:101
 msgid "cerca"
-msgstr "cerca"
+msgstr "Cherchez"
 
 #: quickfind.py:102 quickfind.py:103
 msgid "indietro"
-msgstr "indietro"
+msgstr "Avant"
 
 #: quickfind.py:104 quickfind.py:105
 msgid "risultato ricerca"
-msgstr "risultato ricerca"
+msgstr ""
 
 #: quickfind.py:106 quickfind.py:107
 msgid "Uscita"
-msgstr "Uscita"
+msgstr "Sortie"
 
 #: quickfind.py:113
 msgid "path_file_home_page"
-msgstr "Italiano/archital.htm"
+msgstr ""
 
 #: quickfind.py:144
-#, fuzzy
 msgid "Risultato"
-msgstr "risultato ricerca"
+msgstr ""
 
 #: quickfind.py:147
-#, fuzzy
 msgid "risultato della ricerca"
-msgstr "risultato ricerca"
+msgstr "Résultat de la recherche"
 
 #: quickfind.py:148
 msgid "per visualizzare un documento..."
 msgstr ""
+"Pour visualiser un document cliquer sur le nom.<br>&nbsp;Pour l'éditer "
+"cliquer sur"
 
 #: quickfind.py:268
-#, fuzzy
 msgid "Ricerca"
-msgstr "cerca"
+msgstr "Recherche"
 
 #: quickfind.py:269 quickfind.py:270
 msgid "Scrivi qui..."
-msgstr ""
+msgstr "Escrivez ici..."
 
 #: quickfind.py:271 quickfind.py:272
 msgid "inizia ricerca"
-msgstr "Archivio Silo"
+msgstr "Archive Silo"
 
 #: quickfind.py:273 quickfind.py:274
 msgid "chiudi"
@@ -83,39 +82,36 @@ msgstr ""
 
 #: quickfind.py:277 quickfind.py:278
 msgid "interrompi"
-msgstr ""
+msgstr "Interrompez"
 
 #: quickfind.py:281
 msgid "in tutte le cartelle"
-msgstr ""
+msgstr "En tous les cartons"
 
 #: quickfind.py:282
 msgid "Appunti"
-msgstr ""
+msgstr "Notes"
 
 #: quickfind.py:283
 msgid "Conferenze"
-msgstr ""
+msgstr "Conferen"
 
 #: quickfind.py:284
 msgid "Interviste"
-msgstr ""
+msgstr "Intervie"
 
 #: quickfind.py:285
 msgid "Libri"
-msgstr ""
+msgstr "Livres"
 
 #: quickfind.py:286
 msgid "Materiali"
-msgstr ""
+msgstr "Materiel"
 
 #: quickfind.py:287
 msgid "Riunioni"
-msgstr ""
+msgstr "Reunions"
 
 #: quickfind.py:288
 msgid "Seminari"
-msgstr ""
-
-#~ msgid "default"
-#~ msgstr "default"
+msgstr "Seminair"

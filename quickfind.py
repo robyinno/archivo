@@ -193,6 +193,9 @@ class QuickResult:
 		self.load_lang_labels(lang)
 		self.view_result(result,text_search)
 		self.window.show_all()
+		
+	def on_close(self,button):
+		Gtk.main_quit()	
 	
 	def on_download_progress(self,download,something):
 		progress = download.get_progress()
@@ -245,21 +248,7 @@ class QuickResult:
 		
 	def on_mime_type_policy_decision_requested(self,web_view,frame,request,mimetype,policy_decision):
 		#if not web_view.can_show_mime_type(mimetype):
-			path_file = request.get_uri()
-			if '/tmp/' in path_file == False:
-				policy_decision.download()
-				return True
-				#policy_decision.ignore()
-				web_view.stop_loading()
-				if sys.platform.startswith('darwin'):
-				    subprocess.call(('open', path_file))
-				elif os.name == 'nt':
-				    os.startfile(path_file)
-				elif os.name == 'posix':
-				    subprocess.call(('xdg-open', path_file))
-				return True
-			else:
-				return False
+		return False
 		
 	def load_lang_labels(self,lang):
 		_ = lang.gettext
@@ -293,7 +282,7 @@ class QuickResult:
 	
 		row_html_rtf ="""&nbsp;<a href='%s' title='%s'><img border='0' src='check.gif'></a>"""
 		
-		row_html = """<font face='Arial' size='2' color='#000000'><b>&nbsp;&nbsp;&nbsp;<a href='%s' target="_blank" title='%s'>%s</a>
+		row_html = """<font face='Arial' size='2' color='#000000'><b>&nbsp;&nbsp;&nbsp;<a href='%s' title='%s'>%s</a>
 	</b></font><br>"""
 		row_media_html = """<a href='%s' target="_blank" title='%s'><img border='0' src='../Imagenes/%s.gif'></a><br/>"""
 	#target='f_dx'
@@ -367,7 +356,7 @@ class QuickSearch:
 		self.window.show_all()
 	
 	def on_close(self,button):
-		Gtk.main_quit()
+		self.window.destroy()
 		
 	def on_interrupt(self,button):
 		self.conn.interrupt()
@@ -389,9 +378,6 @@ class QuickSearch:
 	def on_start_search(self,button):
 		#threading.Thread(target = self._start_search_core())
 		self._start_search_core()
-	
-	def on_close(self,buttom):
-		pass
 		
 	def _start_search_core(self):
 		import sqlite3
