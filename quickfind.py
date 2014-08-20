@@ -14,6 +14,7 @@ config = ConfigParser.ConfigParser()
 config.readfp(open(os.getcwd() + '/quickfind.ini'))
 RootPath = config.get('QuickFind','RootPath')
 DBName = config.get('QuickFind','DBName')
+ArchivioAltri = config.get('QuickFind','ArchivioAltri')
 
 logging.basicConfig(filename='/tmp/quickfind.log',level=logging.DEBUG,format="%(asctime)s - %(levelname)s - %(message)s")
 
@@ -379,7 +380,10 @@ class QuickSearch:
 		#threading.Thread(target = self._start_search_core())
 		self._start_search_core()
 		
-	def _start_search_core(self):
+	def on_archivio_altri_clicked(self,button):
+		self._start_search_core(otro = True)
+		
+	def _start_search_core(self,otro = None ):
 		import sqlite3
 		self.conn = sqlite3.connect(DBName,check_same_thread = False)
 		self.conn.row_factory = helpers.dict_factory
@@ -412,6 +416,10 @@ class QuickSearch:
 		#if type_search != None:		
 		#	sql = sql + " and d.nome_doc_pdf like '%" + type_search + "%'"
 			#param.append(type_search)
+			
+		if otro:
+			sql = sql + " and d.nome_doc_rtf like '%%%s%%'"%(ArchivioAltri)
+			
 		sql = sql + " group by d.nome_doc_pdf"
 		#cursor.execute(sql,param)
 		self.cursor.execute(sql)
